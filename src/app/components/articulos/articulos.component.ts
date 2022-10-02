@@ -3,6 +3,7 @@ import {MockArticulosService} from "../../services/mock-articulos.service";
 import {ArticulosFamiliasService} from "../../services/articulos-familias.service";
 import {Articulo} from "../../models/articulo";
 import {ArticuloFamilia} from "../../models/articulo-familia";
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-articulos',
@@ -35,6 +36,22 @@ export class ArticulosComponent implements OnInit {
     { Id: false, Nombre: "NO" }
   ];
 
+  FormBusqueda = new FormGroup({
+    Nombre: new FormControl(null),
+    Activo: new FormControl(null),
+  });
+
+  FormRegistro = new FormGroup({
+    IdArticulo: new FormControl(0),
+    Nombre: new FormControl(''),
+    Precio: new FormControl(null),
+    Stock: new FormControl(null),
+    CodigoDeBarra: new FormControl (''),
+    IdArticuloFamilia: new FormControl(''),
+    FechaAlta: new FormControl(''),
+    Activo: new FormControl(true),
+  });
+
   constructor(private articulosService: MockArticulosService,
               private articulosFamiliaService: ArticulosFamiliasService) { }
 
@@ -50,12 +67,13 @@ export class ArticulosComponent implements OnInit {
 
   Agregar(): void {
     this.AccionABMC = 'A';
+    this.FormRegistro.reset({Activo: true, IdArticulo: 0});
   }
 
   // Buscar segun los filtros, establecidos en FormRegistro
   Buscar(): void {
     this.articulosService
-      .get('', null, this.Pagina)
+      .get(this.FormBusqueda.value.Nombre, this.FormBusqueda.value.Activo, this.Pagina)
       .subscribe((res: any) => {
         this.Items = res.Items;
         this.RegistrosTotal = res.RegistrosTotal;
