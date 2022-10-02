@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
-import {ArticuloFamilia} from "../models/articulo-familia";
+import {ArticuloFamilia, ArticulosFamilias} from "../models/articulo-familia";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class ArticulosFamiliasService {
     this.resourceUrl = "https://pav2.azurewebsites.net/api/ArticulosFamilias/";
   }
 
-  get() {
+  get(): Observable<ArticuloFamilia[]> {
     return this.httpClient.get<ArticuloFamilia[]>(this.resourceUrl);
   }
 }
