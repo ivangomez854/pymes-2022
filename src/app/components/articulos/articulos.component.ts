@@ -4,6 +4,7 @@ import {ArticulosFamiliasService} from "../../services/articulos-familias.servic
 import {Articulo} from "../../models/articulo";
 import {ArticuloFamilia} from "../../models/articulo-familia";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {ArticulosService} from "../../services/articulos.service";
 
 @Component({
   selector: 'app-articulos',
@@ -52,7 +53,7 @@ export class ArticulosComponent implements OnInit {
     Activo: new FormControl(true),
   });
 
-  constructor(private articulosService: MockArticulosService,
+  constructor(private articulosService: ArticulosService,
               private articulosFamiliaService: ArticulosFamiliasService) { }
 
   ngOnInit(): void {
@@ -63,6 +64,11 @@ export class ArticulosComponent implements OnInit {
     this.articulosFamiliaService.get().subscribe(res => {
       this.Familias = res;
     });
+  }
+
+  GetArticuloFamiliaNombre(Id:number) {
+    let Nombre = this.Familias?.find(x => x.IdArticuloFamilia === Id)?.Nombre;
+    return Nombre;
   }
 
   Agregar(): void {
@@ -80,9 +86,16 @@ export class ArticulosComponent implements OnInit {
       });
   }
 // Obtengo un registro especifico según el Id
-  BuscarPorId(Item:Articulo, AccionABMC:string ): void {
+  BuscarPorId(Item:Articulo, AccionABMC:string ) {
     window.scroll(0, 0); // ir al incio del scroll
-    this.AccionABMC = AccionABMC;
+    this.articulosService.getById(Item.IdArticulo).subscribe((res: any) => {
+      const itemCopy = { ...res }; // hacemos copia para no modificar el array original del mock
+//formatear fecha de ISO 8601 a string dd/MM/yyyy
+      var arrFecha = itemCopy.FechaAlta.substr(0, 10).split("-");
+      itemCopy.FechaAlta = arrFecha[2] + "/" + arrFecha[1] + "/" + arrFecha[0];
+      this.FormRegistro.patchValue(itemCopy);
+      this.AccionABMC = AccionABMC;
+    });
   }
   Consultar(Item:Articulo): void {
     this.BuscarPorId(Item, "C");
@@ -96,17 +109,49 @@ export class ArticulosComponent implements OnInit {
     this.BuscarPorId(Item, "M");
   }
 // grabar tanto altas como modificaciones
-  Grabar(): void {
-    alert("Registro Grabado!");
-    this.Volver();
+  Grabar() {
+//hacemos una copia de los datos del formulario, para modificar la fecha y luego enviarlo al servidor
+    const itemCopy = { ...this.FormRegistro.value };
+//convertir fecha de string dd/MM/yyyy a ISO para que la entienda webapi
+    var arrFecha = itemCopy.FechaAlta.substr(0, 10).split("/");
+    if (arrFecha.length == 3)
+      itemCopy.FechaAlta =
+        new Date(
+          arrFecha[2],
+          arrFecha[1] - 1,
+          arrFecha[0]
+        ).toISOString();
+// agregar post
+    if (this.AccionABMC == "A") {
+      this.articulosService.post(itemCopy).subscribe((res: any) => {
+        this.Volver();
+        alert('Registro agregado correctamente.');
+        this.Buscar();
+      });
+    } else {
+// modificar put
+      this.articulosService
+        .put(itemCopy.IdArticulo, itemCopy)
+        .subscribe((res: any) => {
+          this.Volver();
+          alert('Registro modificado correctamente.');
+          this.Buscar();
+        });
+    }
   }
-  ActivarDesactivar(Item:Articulo): void {
+  ActivarDesactivar(Item : Articulo) {
     var resp = confirm(
       "Esta seguro de " +
       (Item.Activo ? "desactivar" : "activar") +
-    " este registro?");
+      " este registro?");
     if (resp === true)
-      alert("registro activado/desactivado!");
+    {
+      this.articulosService
+        .delete(Item.IdArticulo)
+        .subscribe((res: any) =>
+      this.Buscar()
+    );
+    }
   }
 // Volver desde Agregar/Modificar
   Volver(): void {
