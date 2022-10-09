@@ -8,7 +8,6 @@ import {HttpClientModule} from "@angular/common/http";
 import { MenuComponent } from './components/menu/menu.component';
 import { ArticulosComponent } from './components/articulos/articulos.component';
 import { ReactiveFormsModule } from  '@angular/forms';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -23,7 +22,6 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    NgbPaginationModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

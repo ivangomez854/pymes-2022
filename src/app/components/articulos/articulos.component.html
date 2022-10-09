@@ -46,7 +46,6 @@
       <th class="text-center">Stock</th>
       <th class="text-center">Fecha de Alta</th>
       <th class="text-center">Activo</th>
-      <th class="text-center">Familia</th>
       <th class="text-center text-nowrap">Acciones</th>
     </tr>
     </thead>
@@ -57,7 +56,6 @@
       <td class="text-right">{{item.Stock}}</td>
       <td>{{item.FechaAlta| date:'dd/MM/yyyy'}}</td>
       <td>{{item.Activo ? 'SI' : 'NO'}}</td>
-      <td>{{GetArticuloFamiliaNombre(item.IdArticuloFamilia)}}</td>
       <td class="text-center text-nowrap">
         <button type="button" class="btn btn-sm btn-outline-primary"
                 title="Consultar" (click)="Consultar(item)">
@@ -84,7 +82,7 @@
         <span class="label label-default">Registros: {{RegistrosTotal}}</span>
       </div>
       <div class="col text-center">
-        <ngb-pagination [(page)]="Pagina" (pageChange)="Buscar()" [maxSize]="10" [collectionSize]="RegistrosTotal" [pageSize]="10"></ngb-pagination>
+        Directiva paginador aqui
       </div>
       <div class="col text-right">
         <button type="button" class="btn btn-primary"
