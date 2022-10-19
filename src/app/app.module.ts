@@ -4,13 +4,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { ArticulosFamiliasComponent } from './components/articulos-familias/articulos-familias.component';
-import {HttpClientModule} from "@angular/common/http";
 import { MenuComponent } from './components/menu/menu.component';
 import { ArticulosComponent } from './components/articulos/articulos.component';
 import { ReactiveFormsModule } from  '@angular/forms';
 import { CambiarTituloPipe } from './models/cambiar-titulo.pipe';
 import { ModalDialogComponent } from './components/modal-dialog/modal-dialog.component';
 import { NgbPaginationModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { MyInterceptor } from "./shared/my-interceptor";
+
 
 
 @NgModule({
@@ -31,7 +33,7 @@ import { NgbPaginationModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap'
     NgbPaginationModule,
     NgbModalModule,
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: MyInterceptor, multi: true}],
   bootstrap: [AppComponent],
   entryComponents: [
     ModalDialogComponent

@@ -20,7 +20,7 @@ export class ModalDialogComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  constructor(private activeModal: NgbActiveModal) {
+  constructor(public activeModal: NgbActiveModal) {
     this.bloquearPantalla = false;
   }
   cerrar() {
