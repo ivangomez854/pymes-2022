@@ -9,6 +9,12 @@ import { MenuComponent } from './components/menu/menu.component';
 import { ArticulosComponent } from './components/articulos/articulos.component';
 import { ReactiveFormsModule } from  '@angular/forms';
 import { CambiarTituloPipe } from './models/cambiar-titulo.pipe';
+import { ModalDialogComponent } from './components/modal-dialog/modal-dialog.component';
+import {
+  NgbPaginationModule,
+  NgbModalModule
+} from '@ng-bootstrap/ng-bootstrap';
+
 
 @NgModule({
   declarations: [
@@ -17,15 +23,20 @@ import { CambiarTituloPipe } from './models/cambiar-titulo.pipe';
     ArticulosFamiliasComponent,
     MenuComponent,
     ArticulosComponent,
-    CambiarTituloPipe
+    CambiarTituloPipe,
+    ModalDialogComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    NgbModalModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    ModalDialogComponent
+  ]
 })
 export class AppModule { }
