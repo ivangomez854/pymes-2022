@@ -10,10 +10,7 @@ import { ArticulosComponent } from './components/articulos/articulos.component';
 import { ReactiveFormsModule } from  '@angular/forms';
 import { CambiarTituloPipe } from './models/cambiar-titulo.pipe';
 import { ModalDialogComponent } from './components/modal-dialog/modal-dialog.component';
-import {
-  NgbPaginationModule,
-  NgbModalModule
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbPaginationModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -31,6 +28,7 @@ import {
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    NgbPaginationModule,
     NgbModalModule,
   ],
   providers: [],
