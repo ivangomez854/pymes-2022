@@ -5,6 +5,7 @@ import {Articulo} from "../../models/articulo";
 import {ArticuloFamilia} from "../../models/articulo-familia";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {ArticulosService} from "../../services/articulos.service";
+import {ModalDialogService} from "../../services/modal-dialog.service";
 
 @Component({
   selector: 'app-articulos',
@@ -74,7 +75,8 @@ export class ArticulosComponent implements OnInit {
   public submitted = false;
 
   constructor(private articulosService: ArticulosService,
-              private articulosFamiliaService: ArticulosFamiliasService) { }
+              private articulosFamiliaService: ArticulosFamiliasService,
+              private modalDialogService: ModalDialogService) { }
 
   ngOnInit(): void {
     this.GetFamiliasArticulos();
@@ -99,14 +101,17 @@ export class ArticulosComponent implements OnInit {
   }
 
   // Buscar segun los filtros, establecidos en FormRegistro
-  Buscar(): void {
+  Buscar() {
+    this.modalDialogService.BloquearPantalla();
     this.articulosService
       .get(this.FormBusqueda.value.Nombre, this.FormBusqueda.value.Activo, this.Pagina)
       .subscribe((res: any) => {
         this.Items = res.Items;
         this.RegistrosTotal = res.RegistrosTotal;
+        this.modalDialogService.DesbloquearPantalla();
       });
   }
+
 // Obtengo un registro especifico según el Id
   BuscarPorId(Item:Articulo, AccionABMC:string ) {
     window.scroll(0, 0); // ir al incio del scroll
@@ -171,18 +176,22 @@ export class ArticulosComponent implements OnInit {
     }
   }
   ActivarDesactivar(Item : Articulo) {
-    var resp = confirm(
+    this.modalDialogService.Confirm(
       "Esta seguro de " +
       (Item.Activo ? "desactivar" : "activar") +
-      " este registro?");
-    if (resp === true)
-    {
-      this.articulosService
-        .delete(Item.IdArticulo)
-        .subscribe((res: any) =>
-      this.Buscar()
+      " este registro?",
+      undefined,
+      undefined,
+      undefined,
+      () =>
+        this.articulosService
+          .delete(Item.IdArticulo)
+          .subscribe((res: any) =>
+            this.Buscar()
+          ),
+      null
     );
-    }
+
   }
 // Volver desde Agregar/Modificar
   Volver(): void {
